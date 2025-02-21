@@ -8,23 +8,24 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 
-class MainActivity : AppCompatActivity() {
-
+class Leaderboard : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-        setContentView(R.layout.activity_main)
+        setContentView(R.layout.activity_leaderboard)
 
-        val loginButton = findViewById<Button>(R.id.login)
-        loginButton.setOnClickListener {
+        val cancel = findViewById<Button>(R.id.cancelButton)
+        val play = findViewById<Button>(R.id.playButton)
+
+        cancel.setOnClickListener {
             val intent = Intent(this, BusinessList::class.java)
             startActivity(intent)
         }
 
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
-            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
-            insets
+        play.setOnClickListener {
+            val intent = Intent(this, Game::class.java)
+            startActivity(intent)
         }
+
     }
 }

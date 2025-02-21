@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:id="@+id/linearLayout"
+        android:layout_width="421dp"
+        android:layout_height="241dp"
+        android:background="#E3F2F2"
+        android:orientation="vertical"
+        android:padding="25dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+            android:id="@+id/leaderboardTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Leaderboard for Rewards"
+            android:textAlignment="center"
+            android:textColor="#1F1E1E"
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/place1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="BigBusiness: 50 points"
+            android:textAlignment="center"
+            android:textColor="#1F1E1E"
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/place2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Andrew: 20 points"
+            android:textAlignment="center"
+            android:textColor="#1F1E1E"
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/place3"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Scott: 10 points"
+            android:textAlignment="center"
+            android:textColor="#1F1E1E"
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/userPlace"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Your Score: 0 points"
+            android:textAlignment="center"
+            android:textColor="#1F1E1E"
+            android:textSize="16sp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="79dp"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/cancelButton"
+                android:layout_width="176dp"
+                android:layout_height="66dp"
+                android:layout_margin="10dp"
+                android:layout_weight="1"
+                android:text="Cancel" />
+
+            <Button
+                android:id="@+id/playButton"
+                android:layout_width="180dp"
+                android:layout_height="66dp"
+                android:layout_margin="10dp"
+                android:layout_weight="1"
+                android:text="Play" />
+        </LinearLayout>
+    </LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

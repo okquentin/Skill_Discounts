@@ -13,6 +13,18 @@
         android:theme="@style/Theme.SkillDiscounts"
         tools:targetApi="31">
         <activity
+            android:name=".Leaderboard"
+            android:exported="false" />
+        <activity
+            android:name=".Rewards"
+            android:exported="false" />
+        <activity
+            android:name=".Game"
+            android:exported="false" />
+        <activity
+            android:name=".BusinessList"
+            android:exported="false" />
+        <activity
             android:name=".MainActivity"
             android:exported="true">
             <intent-filter>
