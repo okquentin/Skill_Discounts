@@ -14,8 +14,10 @@ class Rewards : AppCompatActivity() {
         enableEdgeToEdge()
         setContentView(R.layout.activity_rewards)
 
+        // back button to return to business list
         val backButton = findViewById<Button>(R.id.back)
 
+        // If back button pressed, return to business list
         backButton.setOnClickListener {
             val intent = Intent(this, BusinessList::class.java)
             startActivity(intent)

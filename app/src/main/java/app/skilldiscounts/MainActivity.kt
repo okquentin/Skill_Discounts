@@ -15,6 +15,7 @@ class MainActivity : AppCompatActivity() {
         enableEdgeToEdge()
         setContentView(R.layout.activity_main)
 
+        // login button brings users to business list page
         val loginButton = findViewById<Button>(R.id.login)
         loginButton.setOnClickListener {
             val intent = Intent(this, BusinessList::class.java)

@@ -15,11 +15,14 @@ class Game : AppCompatActivity() {
         enableEdgeToEdge()
         setContentView(R.layout.activity_game)
 
+        // UI elements needed for code
         val backButton = findViewById<Button>(R.id.back_button)
         val birdCharacter = findViewById<ImageView>(R.id.bird)
 
+        // Sets up image view with correct picture
         birdCharacter.setImageResource(R.drawable.game_bird)
 
+        // Back button which appears when the game ends and brings users back to the business list page
         backButton.setOnClickListener {
             val intent = Intent(this, BusinessList::class.java)
             startActivity(intent)
