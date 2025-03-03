@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">Skill Discounts</string>
+    <string name="log_in">Log In</string>
+    <string name="enter_email">Enter Email:</string>
+    <string name="enter_password">Enter Password:</string>
+    <string name="log_in_button">LOG IN</string>
+    <string name="back_to_business">Back to Business</string>
 </resources>
