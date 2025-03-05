@@ -7,52 +7,13 @@
 
     <ImageView
         android:id="@+id/store3Image"
-        android:layout_width="55dp"
+        android:layout_width="62dp"
         android:layout_height="0dp"
         app:layout_constraintBottom_toTopOf="@+id/store3Title"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/divider2"
+        app:layout_constraintStart_toStartOf="@+id/divider2"
         app:layout_constraintTop_toBottomOf="@+id/divider2"
         tools:srcCompat="@drawable/antique" />
-
-    <TextView
-        android:id="@+id/store3Rewards"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="6dp"
-        android:text="Current Rewards Points: 0"
-        android:textColor="#020202"
-        android:textSize="16sp"
-        app:layout_constraintBottom_toTopOf="@+id/store3Description"
-        app:layout_constraintStart_toStartOf="@+id/store3Play"
-        app:layout_constraintTop_toBottomOf="@+id/store3Title" />
-
-    <Button
-        android:id="@+id/store3Play"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="22dp"
-        android:text="Earn Rewards Points"
-        android:textSize="16sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/store3Description" />
-
-    <TextView
-        android:id="@+id/store3Description"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_marginStart="14dp"
-        android:layout_marginEnd="14dp"
-        android:text="Description: Antique shop selling old and unique furniture and items."
-        android:textAlignment="center"
-        android:textColor="#020202"
-        android:textSize="16sp"
-        app:layout_constraintBottom_toTopOf="@+id/store3Play"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/store3Rewards" />
 
     <TextView
         android:id="@+id/store3Title"
@@ -66,11 +27,51 @@
         app:layout_constraintStart_toStartOf="@+id/store3Rewards"
         app:layout_constraintTop_toBottomOf="@+id/store3Image" />
 
+    <Button
+        android:id="@+id/store3Play"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="5dp"
+        android:text="Earn Rewards Points"
+        android:textSize="16sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/store3Description" />
+
+    <TextView
+        android:id="@+id/store3Rewards"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="7dp"
+        android:text="Current Rewards Points: 0"
+        android:textColor="#020202"
+        android:textSize="16sp"
+        app:layout_constraintBottom_toTopOf="@+id/store3Description"
+        app:layout_constraintStart_toStartOf="@+id/store3Play"
+        app:layout_constraintTop_toBottomOf="@+id/store3Title" />
+
+    <TextView
+        android:id="@+id/store3Description"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="14dp"
+        android:layout_marginEnd="14dp"
+        android:layout_marginBottom="8dp"
+        android:text="Description: Antique shop selling old and unique furniture and items."
+        android:textAlignment="center"
+        android:textColor="#020202"
+        android:textSize="16sp"
+        app:layout_constraintBottom_toTopOf="@+id/store3Play"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/store3Rewards" />
+
     <ImageView
         android:id="@+id/store2Image"
         android:layout_width="56dp"
         android:layout_height="0dp"
-        android:layout_marginBottom="17dp"
+        android:layout_marginBottom="23dp"
         android:scaleType="fitCenter"
         app:layout_constraintBottom_toTopOf="@+id/store2Rewards"
         app:layout_constraintEnd_toEndOf="@+id/store2Title"
@@ -78,134 +79,125 @@
         app:layout_constraintTop_toBottomOf="@+id/divider1"
         tools:srcCompat="@drawable/hardware" />
 
-    <Button
-        android:id="@+id/store2Play"
+    <TextView
+        android:id="@+id/store2Rewards"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Earn Rewards Points"
-        android:textSize="16sp"
-        app:layout_constraintBottom_toTopOf="@+id/divider2"
-        app:layout_constraintEnd_toEndOf="@+id/store2Description"
-        app:layout_constraintStart_toStartOf="@+id/store2Description"
-        app:layout_constraintTop_toBottomOf="@+id/store2Rewards" />
-
-    <TextView
-        android:id="@+id/store2Description"
-        android:layout_width="0dp"
-        android:layout_height="46dp"
-        android:layout_marginStart="30dp"
-        android:layout_marginTop="201dp"
-        android:layout_marginEnd="30dp"
-        android:layout_marginBottom="201dp"
-        android:text="Description: A hardware store selling tools and standard home appliances."
-        android:textAlignment="center"
+        android:layout_marginStart="7dp"
+        android:text="Current Rewards Points: 0"
         android:textColor="#020202"
         android:textSize="16sp"
-        app:layout_constraintBottom_toBottomOf="@+id/store3Description"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/store1Description" />
+        app:layout_constraintBottom_toTopOf="@+id/store2Description"
+        app:layout_constraintStart_toStartOf="@+id/store2Play"
+        app:layout_constraintTop_toBottomOf="@+id/store2Image" />
 
     <TextView
         android:id="@+id/store2Title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="32dp"
+        android:layout_marginTop="2dp"
         android:text="Hank's Hardware"
         android:textColor="#020202"
         android:textSize="16sp"
         app:layout_constraintStart_toStartOf="@+id/store2Rewards"
         app:layout_constraintTop_toBottomOf="@+id/store2Image" />
 
-    <TextView
-        android:id="@+id/store2Rewards"
+    <Button
+        android:id="@+id/store2Play"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="45dp"
-        android:text="Current Rewards Points: 0"
+        android:layout_marginBottom="7dp"
+        android:text="Earn Rewards Points"
+        android:textSize="16sp"
+        app:layout_constraintBottom_toTopOf="@+id/divider2"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <TextView
+        android:id="@+id/store2Description"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="33dp"
+        android:layout_marginEnd="33dp"
+        android:layout_marginBottom="54dp"
+        android:text="Description: A hardware store selling tools and standard home appliances."
+        android:textAlignment="center"
         android:textColor="#020202"
         android:textSize="16sp"
-        app:layout_constraintBottom_toTopOf="@+id/store2Play"
-        app:layout_constraintEnd_toEndOf="@+id/store2Description"
-        app:layout_constraintStart_toStartOf="@+id/store2Description"
-        app:layout_constraintTop_toBottomOf="@+id/store2Image" />
+        app:layout_constraintBottom_toTopOf="@+id/divider2"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/store2Rewards" />
 
     <TextView
         android:id="@+id/businessListTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="10dp"
-        android:layout_marginEnd="11dp"
         android:text="Businesses Offering Rewards"
         android:textColor="#020202"
-        android:textSize="24sp"
-        app:layout_constraintBottom_toBottomOf="@+id/toRewards"
+        android:textSize="22sp"
+        app:layout_constraintBottom_toTopOf="@+id/textInputLayout3"
         app:layout_constraintEnd_toStartOf="@+id/toRewards"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <ImageButton
         android:id="@+id/toRewards"
-        android:layout_width="74dp"
-        android:layout_height="50dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="3dp"
-        android:layout_marginBottom="18dp"
+        android:layout_width="66dp"
+        android:layout_height="60dp"
         android:scaleType="centerCrop"
-        app:layout_constraintBottom_toTopOf="@+id/titleDivider"
+        app:layout_constraintBottom_toTopOf="@+id/rewardIndicate"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/businessListTitle"
+        app:layout_constraintStart_toEndOf="@+id/textInputLayout3"
         app:layout_constraintTop_toTopOf="parent"
         tools:srcCompat="@drawable/reward" />
 
     <ImageView
         android:id="@+id/store1Image"
-        android:layout_width="55dp"
+        android:layout_width="69dp"
         android:layout_height="0dp"
-        android:layout_marginBottom="21dp"
-        app:layout_constraintBottom_toTopOf="@+id/store1Rewards"
+        app:layout_constraintBottom_toTopOf="@+id/store1Title"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/titleDivider"
         tools:srcCompat="@drawable/pizza" />
 
-    <Button
-        android:id="@+id/store1Play"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="18dp"
-        android:layout_marginBottom="8dp"
-        android:text="Earn Rewards Points"
-        android:textSize="16sp"
-        app:layout_constraintBottom_toTopOf="@+id/divider1"
-        app:layout_constraintStart_toStartOf="@+id/store1Description"
-        app:layout_constraintTop_toBottomOf="@+id/store1Rewards" />
-
-    <TextView
-        android:id="@+id/store1Description"
-        android:layout_width="235dp"
-        android:layout_height="34dp"
-        android:layout_marginTop="145dp"
-        android:layout_marginBottom="145dp"
-        android:text="Description: A local pizza parlor."
-        android:textColor="#020202"
-        android:textSize="16sp"
-        app:layout_constraintBottom_toTopOf="@+id/store2Rewards"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/businessListTitle" />
-
     <TextView
         android:id="@+id/store1Rewards"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="21dp"
-        android:layout_marginBottom="33dp"
+        android:layout_marginEnd="24dp"
+        android:layout_marginBottom="1dp"
         android:text="Current Rewards Points: 0"
         android:textColor="#020202"
         android:textSize="16sp"
+        app:layout_constraintBottom_toTopOf="@+id/store1Description"
+        app:layout_constraintEnd_toEndOf="@+id/store1Description"
+        app:layout_constraintTop_toBottomOf="@+id/store1Title" />
+
+    <Button
+        android:id="@+id/store1Play"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="17dp"
+        android:text="Earn Rewards Points"
+        android:textSize="16sp"
+        app:layout_constraintBottom_toTopOf="@+id/divider1"
+        app:layout_constraintEnd_toEndOf="@+id/store1Description"
+        app:layout_constraintTop_toBottomOf="@+id/store1Description" />
+
+    <TextView
+        android:id="@+id/store1Description"
+        android:layout_width="244dp"
+        android:layout_height="27dp"
+        android:text="Description: A local pizza parlor."
+        android:textColor="#020202"
+        android:textSize="16sp"
         app:layout_constraintBottom_toTopOf="@+id/store1Play"
-        app:layout_constraintStart_toStartOf="@+id/store1Description"
-        app:layout_constraintTop_toBottomOf="@+id/store1Image" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/store1Rewards" />
 
     <TextView
         android:id="@+id/store1Title"
@@ -214,17 +206,27 @@
         android:text="Pete's Pizza"
         android:textColor="#121111"
         android:textSize="16sp"
+        app:layout_constraintBottom_toTopOf="@+id/store1Rewards"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/store1Image" />
 
     <View
-        android:id="@+id/divider1"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_marginStart="1dp"
+        android:id="@+id/divider2"
+        android:layout_width="412dp"
+        android:layout_height="18dp"
         android:layout_marginEnd="1dp"
-        android:layout_marginBottom="5dp"
+        android:background="?android:attr/listDivider"
+        app:layout_constraintBottom_toTopOf="@+id/store3Image"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/store2Description" />
+
+    <View
+        android:id="@+id/divider1"
+        android:layout_width="415dp"
+        android:layout_height="14dp"
+        android:layout_marginBottom="15dp"
         android:background="?android:attr/listDivider"
         app:layout_constraintBottom_toTopOf="@+id/store2Image"
         app:layout_constraintEnd_toEndOf="parent"
@@ -232,27 +234,56 @@
         app:layout_constraintTop_toBottomOf="@+id/store1Play" />
 
     <View
-        android:id="@+id/divider2"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_marginStart="1dp"
-        android:layout_marginEnd="1dp"
-        android:background="?android:attr/listDivider"
-        app:layout_constraintBottom_toTopOf="@+id/store3Image"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/store2Play" />
-
-    <View
         android:id="@+id/titleDivider"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_marginStart="1dp"
-        android:layout_marginEnd="1dp"
-        android:layout_marginBottom="16dp"
+        android:layout_width="405dp"
+        android:layout_height="15dp"
+        android:layout_marginBottom="12dp"
         android:background="?android:attr/listDivider"
         app:layout_constraintBottom_toTopOf="@+id/store1Image"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/toRewards" />
+        app:layout_constraintTop_toBottomOf="@+id/rewardIndicate" />
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/textInputLayout3"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginEnd="101dp"
+        android:layout_marginBottom="14dp"
+        app:layout_constraintBottom_toTopOf="@+id/titleDivider"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/imageView3"
+        app:layout_constraintTop_toBottomOf="@+id/toRewards">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:layout_width="254dp"
+            android:layout_height="38dp"
+            android:hint="Search businesses..." />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <TextView
+        android:id="@+id/rewardIndicate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="76dp"
+        android:layout_marginBottom="34dp"
+        android:text="See Rewards"
+        android:textSize="15sp"
+        app:layout_constraintBottom_toTopOf="@+id/titleDivider"
+        app:layout_constraintEnd_toEndOf="@+id/toRewards"
+        app:layout_constraintStart_toStartOf="@+id/toRewards"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/imageView3"
+        android:layout_width="33dp"
+        android:layout_height="34dp"
+        android:layout_marginStart="7dp"
+        android:layout_marginEnd="12dp"
+        app:layout_constraintBottom_toBottomOf="@+id/textInputLayout3"
+        app:layout_constraintEnd_toStartOf="@+id/textInputLayout3"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/textInputLayout3"
+        app:srcCompat="@drawable/search_icon" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
