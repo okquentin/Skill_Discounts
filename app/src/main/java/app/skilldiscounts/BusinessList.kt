@@ -9,10 +9,16 @@ import androidx.core.view.WindowInsetsCompat
 import android.widget.Button
 import android.widget.ImageButton
 import android.widget.ImageView
+import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 
 class BusinessList : AppCompatActivity() {
+
+    // Variables for the point totals in the view (Make Random between 100-1000)
+    var points1 = 0
+    var points2 = 0
+    var points3 = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -23,6 +29,11 @@ class BusinessList : AppCompatActivity() {
         val businessOne = findViewById<ImageView>(R.id.store1Image)
         val businessTwo = findViewById<ImageView>(R.id.store2Image)
         val businessThree = findViewById<ImageView>(R.id.store3Image)
+
+        // Text Views in use on page
+        val pointsOne = findViewById<TextView>(R.id.store1Rewards)
+        val pointsTwo = findViewById<TextView>(R.id.store2Rewards)
+        val pointsThree = findViewById<TextView>(R.id.store3Rewards)
 
         // Buttons in use on page
         val businessOneGame = findViewById<Button>(R.id.store1Play)
