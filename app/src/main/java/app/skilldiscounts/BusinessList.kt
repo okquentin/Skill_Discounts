@@ -16,9 +16,9 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 class BusinessList : AppCompatActivity() {
 
     // Variables for the point totals in the view (Make Random between 100-1000)
-    var points1 = 768
-    var points2 = 125
-    var points3 = 459
+    private var points1 = 768
+    private var points2 = 125
+    private var points3 = 459
 
     // TextView Variables
     private lateinit var pointsOne: TextView
@@ -43,7 +43,7 @@ class BusinessList : AppCompatActivity() {
         pointsTwo = findViewById<TextView>(R.id.store2Rewards)
         pointsThree = findViewById<TextView>(R.id.store3Rewards)
 
-        // Ensures ints are the same across views
+        // Ensures ints are the same across views (if it worked)
         reward = Rewards()
         points1 = reward.points1(points1)
         points2 = reward.points2(points2)

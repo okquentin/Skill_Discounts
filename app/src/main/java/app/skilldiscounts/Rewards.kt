@@ -50,7 +50,7 @@ class Rewards : AppCompatActivity() {
         walletTwo = findViewById<TextView>(R.id.wallet2)
         walletThree = findViewById<TextView>(R.id.wallet3)
 
-        // Ensures ints are the same across views
+        // Ensures ints are the same across views (If it worked)
         list = BusinessList()
         points1 = list.points1()
         points2 = list.points2()
