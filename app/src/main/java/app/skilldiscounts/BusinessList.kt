@@ -1,5 +1,6 @@
 package app.skilldiscounts
 
+import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import androidx.activity.enableEdgeToEdge
@@ -10,23 +11,26 @@ import android.widget.Button
 import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 
 class BusinessList : AppCompatActivity() {
 
-    // Variables for the point totals in the view (Make Random between 100-1000)
+    // Variables for the point totals in the view
     private var points1 = 768
     private var points2 = 125
     private var points3 = 459
+
+    // Variables to store the values for the money in the Rewards class
+    private var wallet1 = 3
+    private var wallet2 = 2
+    private var wallet3 = 4
 
     // TextView Variables
     private lateinit var pointsOne: TextView
     private lateinit var pointsTwo: TextView
     private lateinit var pointsThree: TextView
-
-    // Rewards Class used for functions
-    private lateinit var reward: Rewards
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -43,13 +47,7 @@ class BusinessList : AppCompatActivity() {
         pointsTwo = findViewById<TextView>(R.id.store2Rewards)
         pointsThree = findViewById<TextView>(R.id.store3Rewards)
 
-        // Ensures ints are the same across views (if it worked)
-        reward = Rewards()
-        points1 = reward.points1(points1)
-        points2 = reward.points2(points2)
-        points3 = reward.points3(points3)
-
-        // Update to reflect changes in Rewards View
+        // Update to reflect variable values
         stringUpdate()
 
         // Buttons in use on page
@@ -83,7 +81,13 @@ class BusinessList : AppCompatActivity() {
         // Rewards button brings users to rewards page
         rewardsIcon.setOnClickListener {
             val intent = Intent(this, Rewards::class.java)
-            startActivity(intent)
+            intent.putExtra("wallet1", wallet1)
+            intent.putExtra("wallet2", wallet2)
+            intent.putExtra("wallet3", wallet3)
+            intent.putExtra("points1", points1)
+            intent.putExtra("points2", points2)
+            intent.putExtra("points3", points3)
+            rewardsLauncher.launch(intent)
         }
 
     }
@@ -95,15 +99,16 @@ class BusinessList : AppCompatActivity() {
         pointsThree.text = getString(R.string.store_3_Rewards, points3)
     }
 
-    fun points1(): Int {
-        return points1
-    }
-
-    fun points2(): Int {
-        return points2
-    }
-
-    fun points3(): Int {
-        return points3
+    val rewardsLauncher = registerForActivityResult(
+        ActivityResultContracts.StartActivityForResult()) { result ->
+        if (result.resultCode == Activity.RESULT_OK) {
+            wallet1 = result.data!!.getIntExtra("wallet1", wallet1)
+            wallet2 = result.data!!.getIntExtra("wallet2", wallet2)
+            wallet3 = result.data!!.getIntExtra("wallet3", wallet3)
+            points1 = result.data!!.getIntExtra("points1", points1)
+            points2 = result.data!!.getIntExtra("points2", points2)
+            points3 = result.data!!.getIntExtra("points3", points3)
+        }
+        stringUpdate()
     }
 }
