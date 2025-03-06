@@ -1,5 +1,10 @@
 <resources>
     <string name="app_name">Skill Discounts</string>
+    <string name="log_in">Log In</string>
+    <string name="enter_email">Enter Email:</string>
+    <string name="enter_password">Enter Password:</string>
+    <string name="log_in_button">LOG IN</string>
+    <string name="back_to_business">Back to Business</string>
     <string name="store_1_Rewards">Current Rewards Points: %d</string>
     <string name="store_2_Rewards">Current Rewards Points: %d</string>
     <string name="store_3_Rewards">Current Rewards Points: %d</string>
@@ -9,9 +14,4 @@
     <string name="rewards_points_2">Rewards Points: %d</string>
     <string name="current_wallet_balance_1">Current Wallet Balance: $%d.00</string>
     <string name="rewards_points_1">Rewards Points: %d</string>
-    <string name="log_in">Log In</string>
-    <string name="enter_email">Enter Email:</string>
-    <string name="enter_password">Enter Password:</string>
-    <string name="log_in_button">LOG IN</string>
-    <string name="back_to_business">Back to Business</string>
 </resources>
