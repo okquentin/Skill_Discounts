@@ -9,10 +9,24 @@ import androidx.core.view.WindowInsetsCompat
 import android.widget.Button
 import android.widget.ImageButton
 import android.widget.ImageView
+import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 
 class BusinessList : AppCompatActivity() {
+
+    // Variables for the point totals in the view (Make Random between 100-1000)
+    private var points1 = 768
+    private var points2 = 125
+    private var points3 = 459
+
+    // TextView Variables
+    private lateinit var pointsOne: TextView
+    private lateinit var pointsTwo: TextView
+    private lateinit var pointsThree: TextView
+
+    // Rewards Class used for functions
+    private lateinit var reward: Rewards
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -23,6 +37,20 @@ class BusinessList : AppCompatActivity() {
         val businessOne = findViewById<ImageView>(R.id.store1Image)
         val businessTwo = findViewById<ImageView>(R.id.store2Image)
         val businessThree = findViewById<ImageView>(R.id.store3Image)
+
+        // Text Views in use on page
+        pointsOne = findViewById<TextView>(R.id.store1Rewards)
+        pointsTwo = findViewById<TextView>(R.id.store2Rewards)
+        pointsThree = findViewById<TextView>(R.id.store3Rewards)
+
+        // Ensures ints are the same across views (if it worked)
+        reward = Rewards()
+        points1 = reward.points1(points1)
+        points2 = reward.points2(points2)
+        points3 = reward.points3(points3)
+
+        // Update to reflect changes in Rewards View
+        stringUpdate()
 
         // Buttons in use on page
         val businessOneGame = findViewById<Button>(R.id.store1Play)
@@ -58,5 +86,24 @@ class BusinessList : AppCompatActivity() {
             startActivity(intent)
         }
 
+    }
+
+    // Updates the Rewards view to ensure the view corresponds to the values in the Rewards View
+    fun stringUpdate(){
+        pointsOne.text = getString(R.string.store_1_Rewards, points1)
+        pointsTwo.text = getString(R.string.store_2_Rewards, points2)
+        pointsThree.text = getString(R.string.store_3_Rewards, points3)
+    }
+
+    fun points1(): Int {
+        return points1
+    }
+
+    fun points2(): Int {
+        return points2
+    }
+
+    fun points3(): Int {
+        return points3
     }
 }
