@@ -94,4 +94,16 @@ class BusinessList : AppCompatActivity() {
         pointsTwo.text = getString(R.string.store_2_Rewards, points2)
         pointsThree.text = getString(R.string.store_3_Rewards, points3)
     }
+
+    fun points1(): Int {
+        return points1
+    }
+
+    fun points2(): Int {
+        return points2
+    }
+
+    fun points3(): Int {
+        return points3
+    }
 }

@@ -52,9 +52,9 @@ class Rewards : AppCompatActivity() {
 
         // Ensures ints are the same across views
         list = BusinessList()
-        points1 = list.points1
-        points2 = list.points2
-        points3 = list.points3
+        points1 = list.points1()
+        points2 = list.points2()
+        points3 = list.points3()
 
         // Make sure everything is the same
         stringUpdate()
