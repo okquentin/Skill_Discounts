@@ -1,3 +1,12 @@
 <resources>
     <string name="app_name">Skill Discounts</string>
+    <string name="store_1_Rewards">Current Rewards Points: %d</string>
+    <string name="store_2_Rewards">Current Rewards Points: %d</string>
+    <string name="store_3_Rewards">Current Rewards Points: %d</string>
+    <string name="rewards_points_3">Rewards Points: %d</string>
+    <string name="wallet_3">Current Wallet Balance: $%d.00</string>
+    <string name="current_wallet_balance_2">Current Wallet Balance: $%d.00</string>
+    <string name="rewards_points_2">Rewards Points: %d</string>
+    <string name="current_wallet_balance_1">Current Wallet Balance: $%d.00</string>
+    <string name="rewards_points_1">Rewards Points: %d</string>
 </resources>

@@ -16,9 +16,17 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 class BusinessList : AppCompatActivity() {
 
     // Variables for the point totals in the view (Make Random between 100-1000)
-    var points1 = 0
-    var points2 = 0
-    var points3 = 0
+    var points1 = 768
+    var points2 = 125
+    var points3 = 459
+
+    // TextView Variables
+    private lateinit var pointsOne: TextView
+    private lateinit var pointsTwo: TextView
+    private lateinit var pointsThree: TextView
+
+    // Rewards Class used for functions
+    private lateinit var reward: Rewards
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -31,9 +39,18 @@ class BusinessList : AppCompatActivity() {
         val businessThree = findViewById<ImageView>(R.id.store3Image)
 
         // Text Views in use on page
-        val pointsOne = findViewById<TextView>(R.id.store1Rewards)
-        val pointsTwo = findViewById<TextView>(R.id.store2Rewards)
-        val pointsThree = findViewById<TextView>(R.id.store3Rewards)
+        pointsOne = findViewById<TextView>(R.id.store1Rewards)
+        pointsTwo = findViewById<TextView>(R.id.store2Rewards)
+        pointsThree = findViewById<TextView>(R.id.store3Rewards)
+
+        // Ensures ints are the same across views
+        reward = Rewards()
+        points1 = reward.points1(points1)
+        points2 = reward.points2(points2)
+        points3 = reward.points3(points3)
+
+        // Update to reflect changes in Rewards View
+        stringUpdate()
 
         // Buttons in use on page
         val businessOneGame = findViewById<Button>(R.id.store1Play)
@@ -69,5 +86,12 @@ class BusinessList : AppCompatActivity() {
             startActivity(intent)
         }
 
+    }
+
+    // Updates the Rewards view to ensure the view corresponds to the values in the Rewards View
+    fun stringUpdate(){
+        pointsOne.text = getString(R.string.store_1_Rewards, points1)
+        pointsTwo.text = getString(R.string.store_2_Rewards, points2)
+        pointsThree.text = getString(R.string.store_3_Rewards, points3)
     }
 }
