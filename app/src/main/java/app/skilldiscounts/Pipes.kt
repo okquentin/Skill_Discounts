@@ -11,9 +11,12 @@ import android.view.View
 class Pipe : View {
     var pipeX = 1000f // Initial position
     var width = 200f
-    var height = 400f
+    var height = 0f
     var hasScored = false
     private var isTopPipe: Boolean = false
+    private val gap = 400f
+
+    private var screenHeight = 1500f
 
     private val paint = Paint().apply {
         color = Color.GREEN
@@ -21,7 +24,7 @@ class Pipe : View {
 
     constructor(context: Context, isTopPipe: Boolean) : super(context) {
         this.isTopPipe = isTopPipe
-        height = if (isTopPipe) (300..700).random().toFloat() else 1500f - (300..700).random().toFloat()
+        initializeHeight()
     }
 
     constructor(context: Context, attrs: AttributeSet?) : super(context, attrs) {
@@ -32,22 +35,26 @@ class Pipe : View {
         isTopPipe = false
     }
 
+    override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
+        super.onSizeChanged(w, h, oldw, oldh)
+        screenHeight = h.toFloat()
+    }
+
+    private fun initializeHeight() {
+        height = if (isTopPipe) 400f else 400f
+    }
+
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
         if (isTopPipe) {
-            canvas.drawRect(pipeX, 0f, pipeX + width, height, paint) // Top pipe
+            canvas.drawRect(pipeX, 0f, pipeX + width, height, paint)
         } else {
-            canvas.drawRect(pipeX, height + 300, pipeX + width, 1500f, paint) // Bottom pipe
+            canvas.drawRect(pipeX, screenHeight - height, pipeX + width, screenHeight, paint)
         }
     }
 
     fun movePipe() {
         pipeX -= 10f
-        if (pipeX + width < 0) {
-            pipeX = 1000f
-            height = if (isTopPipe) (300..700).random().toFloat() else 1500f - (300..700).random().toFloat()
-            hasScored = false
-        }
         invalidate()
     }
 
@@ -55,7 +62,7 @@ class Pipe : View {
         return if (isTopPipe) {
             Rect(pipeX.toInt(), 0, (pipeX + width).toInt(), height.toInt())
         } else {
-            Rect(pipeX.toInt(), (height + 300).toInt(), (pipeX + width).toInt(), 1500)
+            Rect(pipeX.toInt(), (screenHeight - height).toInt(), (pipeX + width).toInt(), screenHeight.toInt())
         }
     }
 }

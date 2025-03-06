@@ -1,7 +1,6 @@
 package app.skilldiscounts
 
 import android.content.Intent
-import android.graphics.Rect
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -19,11 +18,11 @@ class Game : AppCompatActivity() {
     private lateinit var pointsMessage: TextView
     private lateinit var backButton: Button
 
-    private var birdY = 0f
     private var velocity = 0f
     private val gravity = 3f
     private var score = 0
     private var isGameOver = false
+    private val gap = 400f
 
     private lateinit var pipeTop: Pipe
     private lateinit var pipeBottom: Pipe
@@ -65,14 +64,15 @@ class Game : AppCompatActivity() {
         pointsMessage.bringToFront()
         backButton.bringToFront()
 
+        // Coordinate pipe positions
+        coordinatePipes()
+
         // Start game loop
         startGameLoop()
 
-        // Tap to jump
-        bird.setOnTouchListener { _, event ->
+        layout.setOnTouchListener { _, event ->
             if (event.action == MotionEvent.ACTION_DOWN && !isGameOver) {
                 velocity = -25f // Jump effect
-                bird.performClick()
             }
             true
         }
@@ -82,14 +82,32 @@ class Game : AppCompatActivity() {
         }
     }
 
+    private fun coordinatePipes() {
+        // Ensure pipes have same x-position
+        pipeBottom.pipeX = pipeTop.pipeX
+        resetPipes()
+    }
+
     private fun startGameLoop() {
         handler.postDelayed({
             handler.post(object : Runnable {
                 override fun run() {
                     if (!isGameOver) {
                         updateBird()
+
+                        // Move pipes and coordinate them
                         pipeTop.movePipe()
-                        pipeBottom.movePipe()
+
+                        // Ensure bottom pipe moves with top pipe
+                        pipeBottom.pipeX = pipeTop.pipeX
+
+                        // If pipes need to be reset (moved past screen)
+                        if (pipeTop.pipeX + pipeTop.width < 0) {
+                            resetPipes()
+                        }
+
+                        pipeBottom.invalidate()
+
                         checkCollision()
                         handler.postDelayed(this, 30)
                     }
@@ -98,44 +116,96 @@ class Game : AppCompatActivity() {
         }, 2000)
     }
 
-    private fun updateBird() {
-        velocity += gravity
-        birdY += velocity
-        bird.translationY = birdY
+    private fun resetPipes() {
+        val screenHeight = resources.displayMetrics.heightPixels.toFloat()
 
-        if (birdY > 1500 || birdY < 0) {
+        // Reset pipes to their starting positions
+        pipeTop.pipeX = 1000f
+        pipeBottom.pipeX = 1000f
+
+        // Set random height for top pipe
+        val minPipeSize = 100f
+        val maxTopHeight = screenHeight - gap - minPipeSize
+        val topHeight = (minPipeSize.toInt()..maxTopHeight.toInt()).random().toFloat()
+        pipeTop.height = topHeight
+
+        // Set bottom pipe height based on top pipe and gap
+        pipeBottom.height = screenHeight - topHeight - gap
+
+        // Reset scoring
+        pipeTop.hasScored = false
+        pipeBottom.hasScored = false
+    }
+
+    private fun updateBird() {
+        // Apply gravity to velocity
+        velocity += gravity
+
+        bird.y += velocity
+
+        // Check bottom boundary - game over if bird falls below screen
+        if (bird.y + bird.height > resources.displayMetrics.heightPixels) {
             gameOver()
+        }
+
+        // Check top boundary - prevent bird from going off top of screen
+        if (bird.y < 0) {
+            bird.y = 0f
+            velocity = 0f
         }
     }
 
     private fun checkCollision() {
-        val birdRect = Rect()
-        bird.getHitRect(birdRect)
+        // Bird's position (center of the image)
+        val birdCenterX = bird.x + bird.width / 2
+        val birdCenterY = bird.y + bird.height / 2
 
+        // Bird's radius
+        val birdRadius = bird.width / 2.5f
+
+        // Get pipe rectangles
         val pipeTopRect = pipeTop.getBounds()
         val pipeBottomRect = pipeBottom.getBounds()
 
-        // Collision detection for top and bottom pipes
-        if (Rect.intersects(birdRect, pipeTopRect) || Rect.intersects(birdRect, pipeBottomRect)) {
+        // Check collision with top pipe
+        if (checkCircleRectCollision(birdCenterX, birdCenterY, birdRadius, pipeTopRect)) {
             gameOver()
+            return
         }
 
-        val birdTopY = birdY  // Bird's top position
-        val bottomPipeBottomY = pipeBottom.height + 300f  // Bottom-most Y position of the bottom pipe
-
-        // If the bird's top is below the bottom of the bottom pipe, end the game
-        if (birdTopY > bottomPipeBottomY) {
+        // Check collision with bottom pipe
+        if (checkCircleRectCollision(birdCenterX, birdCenterY, birdRadius, pipeBottomRect)) {
             gameOver()
+            return
         }
 
         // Scoring: When the bird passes through the pipes
-        if (pipeTop.x + pipeTop.width < bird.x && !pipeTop.hasScored) {
+        if (pipeTop.pipeX + pipeTop.width < birdCenterX - birdRadius && !pipeTop.hasScored) {
             score++
             pipeTop.hasScored = true
             scoreText.text = "Points: $score"
         }
     }
 
+    // Helper function for circle-rectangle collision
+    private fun checkCircleRectCollision(
+        circleX: Float,
+        circleY: Float,
+        radius: Float,
+        rect: android.graphics.Rect
+    ): Boolean {
+        // Find closest point in rectangle to circle center
+        val closestX = circleX.coerceIn(rect.left.toFloat(), rect.right.toFloat())
+        val closestY = circleY.coerceIn(rect.top.toFloat(), rect.bottom.toFloat())
+
+        // Calculate distance between closest point and circle center
+        val distanceX = circleX - closestX
+        val distanceY = circleY - closestY
+
+        // If distance is less than radius, collision detected
+        val distanceSquared = (distanceX * distanceX) + (distanceY * distanceY)
+        return distanceSquared <= (radius * radius)
+    }
 
     private fun gameOver() {
         isGameOver = true
