@@ -17,11 +17,12 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 
 class BusinessList : AppCompatActivity() {
 
-    // Variables for the point totals in the view (Make Random between 100-1000)
+    // Variables for the point totals in the view
     private var points1 = 768
     private var points2 = 125
     private var points3 = 459
 
+    // Variables to store the values for the money in the Rewards class
     private var wallet1 = 3
     private var wallet2 = 2
     private var wallet3 = 4
@@ -30,9 +31,6 @@ class BusinessList : AppCompatActivity() {
     private lateinit var pointsOne: TextView
     private lateinit var pointsTwo: TextView
     private lateinit var pointsThree: TextView
-
-    // Rewards Class used for functions
-    private lateinit var reward: Rewards
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -49,13 +47,7 @@ class BusinessList : AppCompatActivity() {
         pointsTwo = findViewById<TextView>(R.id.store2Rewards)
         pointsThree = findViewById<TextView>(R.id.store3Rewards)
 
-        // Ensures ints are the same across views (if it worked)
-        //reward = Rewards()
-        //points1 = reward.points1(points1)
-        //points2 = reward.points2(points2)
-        //points3 = reward.points3(points3)
-
-        // Update to reflect changes in Rewards View
+        // Update to reflect variable values
         stringUpdate()
 
         // Buttons in use on page
@@ -118,17 +110,5 @@ class BusinessList : AppCompatActivity() {
             points3 = result.data!!.getIntExtra("points3", points3)
         }
         stringUpdate()
-    }
-
-    fun points1(): Int {
-        return points1
-    }
-
-    fun points2(): Int {
-        return points2
-    }
-
-    fun points3(): Int {
-        return points3
     }
 }

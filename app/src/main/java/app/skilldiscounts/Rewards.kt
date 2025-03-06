@@ -28,9 +28,6 @@ class Rewards : AppCompatActivity() {
     private lateinit var walletTwo: TextView
     private lateinit var walletThree: TextView
 
-    // BusinessList Class used for functions
-    private lateinit var list: BusinessList
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -50,18 +47,13 @@ class Rewards : AppCompatActivity() {
         walletTwo = findViewById<TextView>(R.id.wallet2)
         walletThree = findViewById<TextView>(R.id.wallet3)
 
+        // Ensures ints are the same across views
         wallet1 = intent.getIntExtra("wallet1", wallet1)
         wallet2 = intent.getIntExtra("wallet2", wallet2)
         wallet3 = intent.getIntExtra("wallet3", wallet3)
         points1 = intent.getIntExtra("points1", points1)
         points2 = intent.getIntExtra("points2", points2)
         points3 = intent.getIntExtra("points3", points3)
-
-        // Ensures ints are the same across views (If it worked)
-        //list = BusinessList()
-        //points1 = list.points1()
-        //points2 = list.points2()
-        //points3 = list.points3()
 
         // Make sure everything is the same
         stringUpdate()
@@ -117,27 +109,5 @@ class Rewards : AppCompatActivity() {
         walletOne.text = getString(R.string.current_wallet_balance_1, wallet1)
         walletTwo.text = getString(R.string.current_wallet_balance_2, wallet2)
         walletThree.text = getString(R.string.wallet_3, wallet3)
-    }
-
-    // Class functions to get ints outside without an intent
-    fun points1(p: Int): Int {
-        if (points1 == -1){
-            return p
-        }
-        return points1
-    }
-
-    fun points2(p: Int): Int {
-        if (points1 == -1){
-            return p
-        }
-        return points2
-    }
-
-    fun points3(p: Int): Int {
-        if (points1 == -1){
-            return p
-        }
-        return points3
     }
 }
