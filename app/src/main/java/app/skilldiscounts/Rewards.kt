@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.util.Log
 import android.widget.Button
 import android.widget.TextView
+import android.app.Activity
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import retrofit2.Call
@@ -13,8 +14,6 @@ import retrofit2.Response
 
 class Rewards : AppCompatActivity() {
     // Variables for user data
-    private var userId = 1  // This should be dynamically set based on logged-in user
-
     private var points1 = 0
     private var points2 = 0
     private var points3 = 0
@@ -35,6 +34,9 @@ class Rewards : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContentView(R.layout.activity_rewards)
+
+        // Get userId from intent
+        val userId = intent.getIntExtra("userId", -1) // Receive userId
 
         // UI Elements
         val backButton = findViewById<Button>(R.id.back)
@@ -62,6 +64,7 @@ class Rewards : AppCompatActivity() {
             intent.putExtra("points1", points1)
             intent.putExtra("points2", points2)
             intent.putExtra("points3", points3)
+            intent.putExtra("userId", userId) // Pass userId back
             setResult(RESULT_OK, intent)
             finish()
         }
@@ -70,6 +73,13 @@ class Rewards : AppCompatActivity() {
         redemption1.setOnClickListener { redeemPoints(userId, 1) }
         redemption2.setOnClickListener { redeemPoints(userId, 2) }
         redemption3.setOnClickListener { redeemPoints(userId, 3) }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        // Refresh rewards data when returning from the game
+        val userId = intent.getIntExtra("userId", -1)
+        fetchUserRewards(userId)
     }
 
     private fun fetchUserRewards(userId: Int) {
@@ -109,10 +119,6 @@ class Rewards : AppCompatActivity() {
 
     private fun redeemPoints(userId: Int, businessId: Int) {
         Log.d("Rewards", "Attempting to redeem points for businessId: $businessId")
-        if (getPointsForBusiness(businessId) < 250) {
-            Log.e("Rewards", "Not enough points to redeem for businessId: $businessId")
-            return
-        }
 
         val request = RedeemRequest(userId, businessId)
 
@@ -136,7 +142,8 @@ class Rewards : AppCompatActivity() {
                     }
                     updateUI()
                 } else {
-                    Log.e("Rewards", "Redemption failed: ${response.errorBody()?.string()}")
+                    val errorMessage = response.errorBody()?.string() ?: "Unknown error"
+                    Log.e("Rewards", "Redemption failed: $errorMessage")
                 }
             }
 
@@ -162,5 +169,17 @@ class Rewards : AppCompatActivity() {
         walletOne.text = getString(R.string.current_wallet_balance_1, wallet1)
         walletTwo.text = getString(R.string.current_wallet_balance_2, wallet2)
         walletThree.text = getString(R.string.wallet_3, wallet3)
+    }
+
+    override fun finish() {
+        val resultIntent = Intent()
+        resultIntent.putExtra("wallet1", wallet1)
+        resultIntent.putExtra("wallet2", wallet2)
+        resultIntent.putExtra("wallet3", wallet3)
+        resultIntent.putExtra("points1", points1)
+        resultIntent.putExtra("points2", points2)
+        resultIntent.putExtra("points3", points3)
+        setResult(Activity.RESULT_OK, resultIntent)
+        super.finish()
     }
 }

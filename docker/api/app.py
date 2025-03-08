@@ -2,9 +2,14 @@ from flask import Flask, request, jsonify
 import mysql.connector
 import os
 import re  # Import regex module for email validation
-from werkzeug.security import generate_password_hash  # Import password hashing function
+import logging  # Import logging module
+from werkzeug.security import generate_password_hash, check_password_hash  # Import password hashing and checking functions
 
 app = Flask(__name__)
+
+# Configure logging
+logging.basicConfig(level=logging.DEBUG)
+logger = logging.getLogger(__name__)
 
 # MySQL connection details from environment variables
 db_config = {
@@ -22,6 +27,7 @@ def get_db_connection():
 # Fetch rewards for a specific user
 @app.route('/user_rewards/<int:user_id>', methods=['GET'])
 def get_user_rewards(user_id):
+    logger.debug(f"Fetching rewards for user_id: {user_id}")
     try:
         conn = get_db_connection()
         cursor = conn.cursor(dictionary=True)
@@ -37,6 +43,7 @@ def get_user_rewards(user_id):
         
         return jsonify(rewards), 200
     except mysql.connector.Error as err:
+        logger.error(f"Database error: {err}")
         return jsonify({"error": f"Database error: {err}"}), 500
 
 # Redeem rewards for a specific business
@@ -46,7 +53,10 @@ def redeem_points():
     user_id = data.get('user_id')
     business_id = data.get('business_id')
 
+    logger.debug(f"Redeeming points for user_id: {user_id}, business_id: {business_id}")
+
     if not user_id or not business_id:
+        logger.error("Missing required fields")
         return jsonify({"error": "Missing required fields"}), 400
 
     try:
@@ -60,6 +70,7 @@ def redeem_points():
         result = cursor.fetchone()
 
         if not result or result[0] < 250:
+            logger.error("Not enough points")
             return jsonify({"error": "Not enough points"}), 400
 
         # Deduct points and update wallet
@@ -73,8 +84,10 @@ def redeem_points():
         cursor.close()
         conn.close()
 
+        logger.debug("Redemption successful")
         return jsonify({"status": "success", "message": "Redemption successful"}), 200
     except mysql.connector.Error as err:
+        logger.error(f"Database error: {err}")
         return jsonify({"error": f"Database error: {err}"}), 500
 
 # Add a new user
@@ -84,16 +97,21 @@ def add_user():
     email = data.get('email')
     password = data.get('password')
 
+    logger.debug(f"Adding user with email: {email}")
+
     if not email or not password:
+        logger.error("Missing email or password")
         return jsonify({"error": "Missing email or password"}), 400
 
     # Validate email format
     email_regex = r'^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$'
     if not re.match(email_regex, email):
+        logger.error("Invalid email format")
         return jsonify({"error": "Invalid email format"}), 400
 
     # Validate password length
     if len(password) < 8:
+        logger.error("Password must be at least 8 characters long")
         return jsonify({"error": "Password must be at least 8 characters long"}), 400
 
     try:
@@ -115,35 +133,84 @@ def add_user():
                 "INSERT INTO user_rewards (user_id, business_id, points, wallet_balance) VALUES (%s, %s, 0, 0)",
                 (user_id, business_id)
             )
-
         conn.commit()
         cursor.close()
         conn.close()
 
-        return jsonify({"status": "success", "user_id": user_id}), 201
+        logger.debug(f"User added successfully with user_id: {user_id}")
+        return jsonify({"status": "success", "user_id": user_id}), 201  # Ensure user_id is returned
     except mysql.connector.Error as err:
         if err.errno == mysql.connector.errorcode.ER_DUP_ENTRY:
+            logger.error("Email already exists")
             return jsonify({"error": "Email already exists"}), 400
+        logger.error(f"Database error: {err}")
         return jsonify({"error": f"Database error: {err}"}), 500
 
-# Initialize businesses (run once)
-@app.route('/initialize_businesses', methods=['POST'])
-def initialize_businesses():
-    businesses = ["Pizza Place", "Hardware Store", "Antique Shop"]
-    
+# User login
+@app.route('/login', methods=['POST'])
+def login_user():
+    data = request.json
+    email = data.get('email')
+    password = data.get('password')
+
+    logger.debug(f"Logging in user with email: {email}")
+
+    if not email or not password:
+        logger.error("Missing email or password")
+        return jsonify({"error": "Missing email or password"}), 400
+
+    try:
+        conn = get_db_connection()
+        cursor = conn.cursor(dictionary=True)
+
+        # Fetch user by email
+        cursor.execute("SELECT id, password FROM users WHERE email = %s", (email,))
+        user = cursor.fetchone()
+        cursor.close()
+        conn.close()
+
+        if user and check_password_hash(user['password'], password):
+            logger.debug("Login successful")
+            return jsonify({"userId": user['id'], "message": "Login successful"}), 200
+        else:
+            logger.error("Invalid email or password")
+            return jsonify({"error": "Invalid email or password"}), 401
+    except mysql.connector.Error as err:
+        logger.error(f"Database error: {err}")
+        return jsonify({"error": f"Database error: {err}"}), 500
+
+@app.route('/update_points', methods=['POST'])
+def update_points():
+    data = request.json
+    user_id = data.get('user_id')
+    business_id = data.get('business_id')
+    points = data.get('points')
+
+    logger.debug(f"Updating points for user_id: {user_id}, business_id: {business_id}")
+
+    if not user_id or not business_id or points is None:
+        logger.error("Missing required fields")
+        return jsonify({"error": "Missing required fields"}), 400
+
     try:
         conn = get_db_connection()
         cursor = conn.cursor()
 
-        for business in businesses:
-            cursor.execute("INSERT IGNORE INTO businesses (name) VALUES (%s)", (business,))
-
+        # Update user points for the specific business
+        cursor.execute("""
+            UPDATE user_rewards
+            SET points = points + %s
+            WHERE user_id = %s AND business_id = %s
+        """, (points, user_id, business_id))
+        
         conn.commit()
         cursor.close()
         conn.close()
 
-        return jsonify({"status": "success", "message": "Businesses initialized"}), 200
+        logger.debug("Points updated successfully")
+        return jsonify({"status": "success", "message": "Points updated successfully"}), 200
     except mysql.connector.Error as err:
+        logger.error(f"Database error: {err}")
         return jsonify({"error": f"Database error: {err}"}), 500
 
 if __name__ == '__main__':

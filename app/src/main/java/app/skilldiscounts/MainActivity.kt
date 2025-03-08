@@ -6,7 +6,6 @@ import android.util.Log
 import android.util.Patterns
 import android.widget.Button
 import android.widget.EditText
-import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
@@ -30,7 +29,7 @@ class MainActivity : AppCompatActivity() {
             val password = passwordEditText.text.toString()
 
             if (isValidEmail(email)) {
-                // Add login functionality here
+                loginUser(email, password)
             } else {
                 Log.e("MainActivity", "Invalid email format")
             }
@@ -69,7 +68,9 @@ class MainActivity : AppCompatActivity() {
                 if (response.isSuccessful) {
                     val apiResponse = response.body()
                     Log.i("MainActivity", "User created successfully: ${apiResponse?.message}")
+                    Log.i("MainActivity", "User ID: ${apiResponse?.userId}")
                     val intent = Intent(this@MainActivity, BusinessList::class.java)
+                    intent.putExtra("userId", apiResponse?.userId) // Pass userId
                     startActivity(intent)
                 } else {
                     val errorResponse = response.errorBody()?.string()
@@ -78,6 +79,31 @@ class MainActivity : AppCompatActivity() {
             }
 
             override fun onFailure(call: Call<ApiResponse>, t: Throwable) {
+                Log.e("MainActivity", "Error: ${t.message}")
+            }
+        })
+    }
+
+    private fun loginUser(email: String, password: String) {
+        val request = LoginRequest(email, password)
+        val call = RetrofitClient.instance.loginUser(request)
+        call.enqueue(object : Callback<LoginResponse> {
+            override fun onResponse(call: Call<LoginResponse>, response: Response<LoginResponse>) {
+                if (response.isSuccessful) {
+                    val loginResponse = response.body()
+                    val userId = loginResponse?.userId
+                    Log.i("MainActivity", "Login successful: ${loginResponse?.message}")
+                    Log.i("MainActivity", "Retrieved User ID: $userId")
+                    val intent = Intent(this@MainActivity, BusinessList::class.java)
+                    intent.putExtra("userId", userId) // Pass userId
+                    startActivity(intent)
+                } else {
+                    val errorResponse = response.errorBody()?.string()
+                    Log.e("MainActivity", "Failed to login: $errorResponse")
+                }
+            }
+
+            override fun onFailure(call: Call<LoginResponse>, t: Throwable) {
                 Log.e("MainActivity", "Error: ${t.message}")
             }
         })

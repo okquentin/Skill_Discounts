@@ -4,6 +4,7 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.Call
 import retrofit2.http.*
+import com.google.gson.annotations.SerializedName
 
 // Retrofit Client
 object RetrofitClient {
@@ -28,6 +29,12 @@ interface RewardsApi {
 
     @POST("add_user")
     fun createUser(@Body request: CreateUserRequest): Call<ApiResponse>
+
+    @POST("login")
+    fun loginUser(@Body request: LoginRequest): Call<LoginResponse>
+
+    @POST("update_points")
+    fun updateUserPoints(@Body request: UpdatePointsRequest): Call<ApiResponse>
 }
 
 // Data Models
@@ -48,6 +55,23 @@ data class CreateUserRequest(
     val password: String
 )
 
-data class ApiResponse(
+data class LoginRequest(
+    val email: String,
+    val password: String
+)
+
+data class LoginResponse(
+    val userId: Int,
     val message: String
+)
+
+data class ApiResponse(
+    val message: String,
+    @SerializedName("user_id") val userId: Int? = null // Ensure user_id is correctly mapped
+)
+
+data class UpdatePointsRequest(
+    val user_id: Int,
+    val business_id: Int,
+    val points: Int
 )
