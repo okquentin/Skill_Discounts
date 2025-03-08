@@ -1,6 +1,8 @@
 from flask import Flask, request, jsonify
 import mysql.connector
 import os
+import re  # Import regex module for email validation
+from werkzeug.security import generate_password_hash  # Import password hashing function
 
 app = Flask(__name__)
 
@@ -13,6 +15,7 @@ db_config = {
     'port': int(os.getenv('DB_PORT', 3306))
 }
 
+# Function to establish a database connection
 def get_db_connection():
     return mysql.connector.connect(**db_config)
 
@@ -78,17 +81,30 @@ def redeem_points():
 @app.route('/add_user', methods=['POST'])
 def add_user():
     data = request.json
-    username = data.get('username')
+    email = data.get('email')
+    password = data.get('password')
 
-    if not username:
-        return jsonify({"error": "Missing username"}), 400
+    if not email or not password:
+        return jsonify({"error": "Missing email or password"}), 400
+
+    # Validate email format
+    email_regex = r'^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$'
+    if not re.match(email_regex, email):
+        return jsonify({"error": "Invalid email format"}), 400
+
+    # Validate password length
+    if len(password) < 8:
+        return jsonify({"error": "Password must be at least 8 characters long"}), 400
 
     try:
         conn = get_db_connection()
         cursor = conn.cursor()
 
-        # Insert new user
-        cursor.execute("INSERT INTO users (username) VALUES (%s)", (username,))
+        # Hash the password
+        hashed_password = generate_password_hash(password)
+
+        # Insert new user with hashed password
+        cursor.execute("INSERT INTO users (email, password) VALUES (%s, %s)", (email, hashed_password))
         user_id = cursor.lastrowid
 
         # Initialize rewards for all businesses with 0 points and wallet balance
@@ -106,6 +122,8 @@ def add_user():
 
         return jsonify({"status": "success", "user_id": user_id}), 201
     except mysql.connector.Error as err:
+        if err.errno == mysql.connector.errorcode.ER_DUP_ENTRY:
+            return jsonify({"error": "Email already exists"}), 400
         return jsonify({"error": f"Database error: {err}"}), 500
 
 # Initialize businesses (run once)

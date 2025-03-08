@@ -4,6 +4,7 @@
     <string name="enter_email">Enter Email:</string>
     <string name="enter_password">Enter Password:</string>
     <string name="log_in_button">LOG IN</string>
+    <string name="sign_up_button">SIGN UP</string>
     <string name="back_to_business">Back to Business</string>
     <string name="store_1_Rewards">Current Rewards Points: %d</string>
     <string name="store_2_Rewards">Current Rewards Points: %d</string>

@@ -2,11 +2,18 @@ package app.skilldiscounts
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
+import android.util.Patterns
 import android.widget.Button
+import android.widget.EditText
+import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 class MainActivity : AppCompatActivity() {
 
@@ -15,11 +22,32 @@ class MainActivity : AppCompatActivity() {
         enableEdgeToEdge()
         setContentView(R.layout.activity_main)
 
-        // login button brings users to business list page
         val loginButton = findViewById<Button>(R.id.login)
         loginButton.setOnClickListener {
-            val intent = Intent(this, BusinessList::class.java)
-            startActivity(intent)
+            val emailEditText = findViewById<EditText>(R.id.editTextTextEmailAddress)
+            val passwordEditText = findViewById<EditText>(R.id.editTextTextPassword)
+            val email = emailEditText.text.toString()
+            val password = passwordEditText.text.toString()
+
+            if (isValidEmail(email)) {
+                // Add login functionality here
+            } else {
+                Log.e("MainActivity", "Invalid email format")
+            }
+        }
+
+        val signUpButton = findViewById<Button>(R.id.signUp)
+        signUpButton.setOnClickListener {
+            val emailEditText = findViewById<EditText>(R.id.editTextTextEmailAddress)
+            val passwordEditText = findViewById<EditText>(R.id.editTextTextPassword)
+            val email = emailEditText.text.toString()
+            val password = passwordEditText.text.toString()
+
+            if (isValidEmail(email)) {
+                createUser(email, password)
+            } else {
+                Log.e("MainActivity", "Invalid email format")
+            }
         }
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
@@ -27,5 +55,31 @@ class MainActivity : AppCompatActivity() {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
+    }
+
+    private fun isValidEmail(email: String): Boolean {
+        return Patterns.EMAIL_ADDRESS.matcher(email).matches()
+    }
+
+    private fun createUser(email: String, password: String) {
+        val request = CreateUserRequest(email, password)
+        val call = RetrofitClient.instance.createUser(request)
+        call.enqueue(object : Callback<ApiResponse> {
+            override fun onResponse(call: Call<ApiResponse>, response: Response<ApiResponse>) {
+                if (response.isSuccessful) {
+                    val apiResponse = response.body()
+                    Log.i("MainActivity", "User created successfully: ${apiResponse?.message}")
+                    val intent = Intent(this@MainActivity, BusinessList::class.java)
+                    startActivity(intent)
+                } else {
+                    val errorResponse = response.errorBody()?.string()
+                    Log.e("MainActivity", "Failed to create user: $errorResponse")
+                }
+            }
+
+            override fun onFailure(call: Call<ApiResponse>, t: Throwable) {
+                Log.e("MainActivity", "Error: ${t.message}")
+            }
+        })
     }
 }
