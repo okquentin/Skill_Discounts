@@ -2,25 +2,28 @@ package app.skilldiscounts
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.widget.Button
 import android.widget.TextView
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 class Rewards : AppCompatActivity() {
-    // Variables for the points in the view
-    private var points1 = -1
-    private var points2 = -1
-    private var points3 = -1
+    // Variables for user data
+    private var userId = 1  // This should be dynamically set based on logged-in user
 
-    // Variables for the money in the view
-    private var wallet1 = -1
-    private var wallet2 = -1
-    private var wallet3 = -1
+    private var points1 = 0
+    private var points2 = 0
+    private var points3 = 0
 
-    // TextView Variables
+    private var wallet1 = 0
+    private var wallet2 = 0
+    private var wallet3 = 0
+
+    // UI Elements
     private lateinit var pointsOne: TextView
     private lateinit var pointsTwo: TextView
     private lateinit var pointsThree: TextView
@@ -33,33 +36,24 @@ class Rewards : AppCompatActivity() {
         enableEdgeToEdge()
         setContentView(R.layout.activity_rewards)
 
-        // back button to return to business list
+        // UI Elements
         val backButton = findViewById<Button>(R.id.back)
         val redemption1 = findViewById<Button>(R.id.redemption1)
         val redemption2 = findViewById<Button>(R.id.redemption2)
         val redemption3 = findViewById<Button>(R.id.redemption3)
 
-        // Text Views in use on page
-        pointsOne = findViewById<TextView>(R.id.points1)
-        pointsTwo = findViewById<TextView>(R.id.points2)
-        pointsThree = findViewById<TextView>(R.id.points3)
-        walletOne = findViewById<TextView>(R.id.wallet1)
-        walletTwo = findViewById<TextView>(R.id.wallet2)
-        walletThree = findViewById<TextView>(R.id.wallet3)
+        pointsOne = findViewById(R.id.points1)
+        pointsTwo = findViewById(R.id.points2)
+        pointsThree = findViewById(R.id.points3)
+        walletOne = findViewById(R.id.wallet1)
+        walletTwo = findViewById(R.id.wallet2)
+        walletThree = findViewById(R.id.wallet3)
 
-        // Ensures ints are the same across views
-        wallet1 = intent.getIntExtra("wallet1", wallet1)
-        wallet2 = intent.getIntExtra("wallet2", wallet2)
-        wallet3 = intent.getIntExtra("wallet3", wallet3)
-        points1 = intent.getIntExtra("points1", points1)
-        points2 = intent.getIntExtra("points2", points2)
-        points3 = intent.getIntExtra("points3", points3)
+        Log.d("Rewards", "Fetching user rewards for userId: $userId")
+        // Fetch user rewards from API
+        fetchUserRewards(userId)
 
-        // Make sure everything is the same
-        stringUpdate()
-
-
-        // If back button pressed, return to business list
+        // Back button listener
         backButton.setOnClickListener {
             val intent = Intent()
             intent.putExtra("wallet1", wallet1)
@@ -72,37 +66,96 @@ class Rewards : AppCompatActivity() {
             finish()
         }
 
-        // If redemption1 button pressed, redeem points for business 1 if possible
-        redemption1.setOnClickListener {
-            if (points1 >= 250){
-                points1 -= 250
-                wallet1 += 1
-                stringUpdate()
-            }
-        }
-
-        // If redemption2 button pressed, redeem points for business 2 if possible
-        redemption2.setOnClickListener {
-            if (points2 >= 250){
-                points2 -= 250
-                wallet2 += 1
-                stringUpdate()
-            }
-        }
-
-        // If redemption3 button pressed, redeem points for business 3 if possible
-        redemption3.setOnClickListener {
-            if (points3 >= 250){
-                points3 -= 250
-                wallet3 += 1
-                stringUpdate()
-            }
-        }
-
+        // Redemption button listeners
+        redemption1.setOnClickListener { redeemPoints(userId, 1) }
+        redemption2.setOnClickListener { redeemPoints(userId, 2) }
+        redemption3.setOnClickListener { redeemPoints(userId, 3) }
     }
 
-    // Updates the Rewards view to ensure the view corresponds to the executed actions
-    fun stringUpdate(){
+    private fun fetchUserRewards(userId: Int) {
+        RetrofitClient.instance.getUserRewards(userId).enqueue(object : Callback<List<Reward>> {
+            override fun onResponse(call: Call<List<Reward>>, response: Response<List<Reward>>) {
+                if (response.isSuccessful) {
+                    Log.d("Rewards", "Successfully fetched user rewards")
+                    response.body()?.let { rewards ->
+                        rewards.forEach {
+                            when (it.business_id) {
+                                1 -> {
+                                    points1 = it.points
+                                    wallet1 = it.wallet_balance
+                                }
+                                2 -> {
+                                    points2 = it.points
+                                    wallet2 = it.wallet_balance
+                                }
+                                3 -> {
+                                    points3 = it.points
+                                    wallet3 = it.wallet_balance
+                                }
+                            }
+                        }
+                        updateUI()
+                    }
+                } else {
+                    Log.e("Rewards", "Failed to load rewards: ${response.errorBody()?.string()}")
+                }
+            }
+
+            override fun onFailure(call: Call<List<Reward>>, t: Throwable) {
+                Log.e("Rewards", "API Error: ${t.message}")
+            }
+        })
+    }
+
+    private fun redeemPoints(userId: Int, businessId: Int) {
+        Log.d("Rewards", "Attempting to redeem points for businessId: $businessId")
+        if (getPointsForBusiness(businessId) < 250) {
+            Log.e("Rewards", "Not enough points to redeem for businessId: $businessId")
+            return
+        }
+
+        val request = RedeemRequest(userId, businessId)
+
+        RetrofitClient.instance.redeemPoints(request).enqueue(object : Callback<ApiResponse> {
+            override fun onResponse(call: Call<ApiResponse>, response: Response<ApiResponse>) {
+                if (response.isSuccessful) {
+                    Log.d("Rewards", "Redemption successful for businessId: $businessId")
+                    when (businessId) {
+                        1 -> {
+                            points1 -= 250
+                            wallet1 += 1
+                        }
+                        2 -> {
+                            points2 -= 250
+                            wallet2 += 1
+                        }
+                        3 -> {
+                            points3 -= 250
+                            wallet3 += 1
+                        }
+                    }
+                    updateUI()
+                } else {
+                    Log.e("Rewards", "Redemption failed: ${response.errorBody()?.string()}")
+                }
+            }
+
+            override fun onFailure(call: Call<ApiResponse>, t: Throwable) {
+                Log.e("Rewards", "API Error: ${t.message}")
+            }
+        })
+    }
+
+    private fun getPointsForBusiness(businessId: Int): Int {
+        return when (businessId) {
+            1 -> points1
+            2 -> points2
+            3 -> points3
+            else -> 0
+        }
+    }
+
+    private fun updateUI() {
         pointsOne.text = getString(R.string.rewards_points_1, points1)
         pointsTwo.text = getString(R.string.rewards_points_2, points2)
         pointsThree.text = getString(R.string.rewards_points_3, points3)

@@ -3,31 +3,31 @@ package app.skilldiscounts
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
-import androidx.activity.enableEdgeToEdge
-import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
+import android.util.Log
 import android.widget.Button
 import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.appcompat.app.AlertDialog
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import androidx.appcompat.app.AppCompatActivity
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 class BusinessList : AppCompatActivity() {
 
-    // Variables for the point totals in the view
-    private var points1 = 768
-    private var points2 = 125
-    private var points3 = 459
+    private var userId = 1 // Replace with actual user ID
 
-    // Variables to store the values for the money in the Rewards class
-    private var wallet1 = 3
-    private var wallet2 = 2
-    private var wallet3 = 4
+    private var points1 = 0
+    private var points2 = 0
+    private var points3 = 0
 
-    // TextView Variables
+    private var wallet1 = 0
+    private var wallet2 = 0
+    private var wallet3 = 0
+
+    // UI Elements
     private lateinit var pointsOne: TextView
     private lateinit var pointsTwo: TextView
     private lateinit var pointsThree: TextView
@@ -37,48 +37,38 @@ class BusinessList : AppCompatActivity() {
         enableEdgeToEdge()
         setContentView(R.layout.activity_business_list)
 
-        // Image Views in use on page
+        // Image Views
         val businessOne = findViewById<ImageView>(R.id.store1Image)
         val businessTwo = findViewById<ImageView>(R.id.store2Image)
         val businessThree = findViewById<ImageView>(R.id.store3Image)
 
-        // Text Views in use on page
-        pointsOne = findViewById<TextView>(R.id.store1Rewards)
-        pointsTwo = findViewById<TextView>(R.id.store2Rewards)
-        pointsThree = findViewById<TextView>(R.id.store3Rewards)
+        // Text Views
+        pointsOne = findViewById(R.id.store1Rewards)
+        pointsTwo = findViewById(R.id.store2Rewards)
+        pointsThree = findViewById(R.id.store3Rewards)
 
-        // Update to reflect variable values
-        stringUpdate()
-
-        // Buttons in use on page
+        // Buttons
         val businessOneGame = findViewById<Button>(R.id.store1Play)
         val businessTwoGame = findViewById<Button>(R.id.store2Play)
         val businessThreeGame = findViewById<Button>(R.id.store3Play)
         val rewardsIcon = findViewById<ImageButton>(R.id.toRewards)
 
-        // Set the image views to the picture they need to be
+        // Set images
         rewardsIcon.setImageResource(R.drawable.reward)
         businessOne.setImageResource(R.drawable.pizza)
         businessTwo.setImageResource(R.drawable.hardware)
         businessThree.setImageResource(R.drawable.antique)
 
-        // These three buttons take users to the leaderboard page
-        businessOneGame.setOnClickListener {
-            val intent = Intent(this, Leaderboard::class.java)
-            startActivity(intent)
-        }
+        Log.d("BusinessList", "Fetching user rewards for userId: $userId")
+        // Fetch user rewards from API
+        fetchUserRewards(userId)
 
-        businessTwoGame.setOnClickListener {
-            val intent = Intent(this, Leaderboard::class.java)
-            startActivity(intent)
-        }
+        // Navigate to Leaderboard (Gameplay)
+        businessOneGame.setOnClickListener { openLeaderboard() }
+        businessTwoGame.setOnClickListener { openLeaderboard() }
+        businessThreeGame.setOnClickListener { openLeaderboard() }
 
-        businessThreeGame.setOnClickListener {
-            val intent = Intent(this, Leaderboard::class.java)
-            startActivity(intent)
-        }
-
-        // Rewards button brings users to rewards page
+        // Navigate to Rewards page
         rewardsIcon.setOnClickListener {
             val intent = Intent(this, Rewards::class.java)
             intent.putExtra("wallet1", wallet1)
@@ -89,17 +79,56 @@ class BusinessList : AppCompatActivity() {
             intent.putExtra("points3", points3)
             rewardsLauncher.launch(intent)
         }
-
     }
 
-    // Updates the Rewards view to ensure the view corresponds to the values in the Rewards View
-    fun stringUpdate(){
+    private fun openLeaderboard() {
+        val intent = Intent(this, Leaderboard::class.java)
+        startActivity(intent)
+    }
+
+    private fun fetchUserRewards(userId: Int) {
+        RetrofitClient.instance.getUserRewards(userId).enqueue(object : Callback<List<Reward>> {
+            override fun onResponse(call: Call<List<Reward>>, response: Response<List<Reward>>) {
+                if (response.isSuccessful) {
+                    Log.d("BusinessList", "Successfully fetched user rewards")
+                    response.body()?.let { rewards ->
+                        rewards.forEach {
+                            when (it.business_id) {
+                                1 -> {
+                                    points1 = it.points
+                                    wallet1 = it.wallet_balance
+                                }
+                                2 -> {
+                                    points2 = it.points
+                                    wallet2 = it.wallet_balance
+                                }
+                                3 -> {
+                                    points3 = it.points
+                                    wallet3 = it.wallet_balance
+                                }
+                            }
+                        }
+                        updateUI()
+                    }
+                } else {
+                    Log.e("BusinessList", "Failed to load rewards: ${response.errorBody()?.string()}")
+                }
+            }
+
+            override fun onFailure(call: Call<List<Reward>>, t: Throwable) {
+                Log.e("BusinessList", "API Error: ${t.message}")
+            }
+        })
+    }
+
+    private fun updateUI() {
         pointsOne.text = getString(R.string.store_1_Rewards, points1)
         pointsTwo.text = getString(R.string.store_2_Rewards, points2)
         pointsThree.text = getString(R.string.store_3_Rewards, points3)
     }
 
-    val rewardsLauncher = registerForActivityResult(
+    // Receive updated data from Rewards activity
+    private val rewardsLauncher = registerForActivityResult(
         ActivityResultContracts.StartActivityForResult()) { result ->
         if (result.resultCode == Activity.RESULT_OK) {
             wallet1 = result.data!!.getIntExtra("wallet1", wallet1)
@@ -109,6 +138,6 @@ class BusinessList : AppCompatActivity() {
             points2 = result.data!!.getIntExtra("points2", points2)
             points3 = result.data!!.getIntExtra("points3", points3)
         }
-        stringUpdate()
+        updateUI()
     }
 }
